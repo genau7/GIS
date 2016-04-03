@@ -1,9 +1,11 @@
-#include <stdio.h>
-#include <iostream>
+#include "graph.h"
 
 int main(int argc, char *argv[])
 {
-    std::cout<<"Hello world!\n";
+    std::string dataFile = "../GIS/src/tsp17";
+    std::vector<std::vector<int> >* data = FileParser::readMatrix(dataFile);
+    Graph graph(data);
+//    graph.print();
     return 0;
 }
 
