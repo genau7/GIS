@@ -1,11 +1,17 @@
-#include "graph.h"
+#include "search.h"
 
 int main(int argc, char *argv[])
 {
-    std::string dataFile = "../GIS/src/tsp17";
+    //read distance matrix from file into Graph object
+    std::string dataFile = "../GIS/src/tsp5";
     std::vector<std::vector<int> >* data = FileParser::readMatrix(dataFile);
     Graph graph(data);
-//    graph.print();
+    graph.print();
+
+    Search search(&graph);
+    search.heuristic();
+
+
     return 0;
 }
 

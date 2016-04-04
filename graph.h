@@ -10,6 +10,7 @@ public:
     Graph(std::vector<std::vector<int> >* data);
     void print();
     int at(int row, int col);
+    int const getVerticesNum();
     ~Graph();
 private:
     int vNum; //number of vertices
