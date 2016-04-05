@@ -9,6 +9,7 @@ Search::Search(Graph* graph){
 
 void Search::heuristic(){
     //int vNum = graph->getVerticesNum();
+   // int* parent = new int[vNum];
     int parent[vNum]; //minimum spanning tree path (first node's parent index is -1)
     int minDistanceFromTree[vNum];
     bool minTreeSet[vNum];  // if i-element is set to True, than i-vertices has been placed in the tree set
@@ -21,9 +22,9 @@ void Search::heuristic(){
    //pick the first node
     minDistanceFromTree[0] = 0;
     parent[0] = -1;
-    minTreeSet[0] = true;
+    //minTreeSet[0] = true;
 
-    for (int count = 1; count < vNum-1; ++count){
+    for (int count = 0; count < vNum-1; ++count){
         //find and add to tree path a node 'u' such that distance from the tree to it is smallest
         int u = bestVertexIndex(minDistanceFromTree, minTreeSet);
         minTreeSet[u] = true;
@@ -57,8 +58,12 @@ int Search::bestVertexIndex(int minDistanceFromTree[], bool treeSet[]){
 void Search::printTree(int parent[]){
     //int vNum = graph->getVerticesNum();
     printf("Edge   Weight\n");
-    for (int i = 1; i < vNum; i++)
+    int sum = 0;
+    for (int i = 1; i < vNum; i++){
         printf("%d - %d    %d \n", parent[i], i, distance(i, parent[i]));
+        sum += distance(i,parent[i]);
+    }
+    printf("The minimum spanning tree path = %d\n", sum);
 }
 
 int Search::distance(int u, int v){
