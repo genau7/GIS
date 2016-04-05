@@ -11,8 +11,8 @@ private:
 public:
     Search(Graph* graph);
     void heuristic();
-    int bestVertexIndex(int minDistanceFromTree[], bool treeSet[]);
-    void printTree(int parent[]);
+    int bestVertexIndex(std::vector<int> minDistanceFromTree, std::vector<bool> treeSet, int vNum);
+    void printTree(std::vector<int> parent, int vNum);
 };
 
 #endif // SEARCH_H

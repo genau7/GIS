@@ -1,32 +1,23 @@
 #include "search.h"
 #include <stdio.h>
 
-const int vNum = 5; //changed to dynamic value and dynamic arrays later on
-
 Search::Search(Graph* graph){
     this->graph = graph;
 }
 
 void Search::heuristic(){
-    //int vNum = graph->getVerticesNum();
-   // int* parent = new int[vNum];
-    int parent[vNum]; //minimum spanning tree path (first node's parent index is -1)
-    int minDistanceFromTree[vNum];
-    bool minTreeSet[vNum];  // if i-element is set to True, than i-vertices has been placed in the tree set
-
-    for (int i = 0; i < vNum; i++){
-        minDistanceFromTree[i] = INT_MAX;
-        minTreeSet[i] = false;
-    }
+    int vNum = graph->getVerticesNum();
+    std::vector<int> parent(vNum); //minimum spanning tree path (first node's parent index is -1), indicated by nodes' parent
+    std::vector<int>minDistanceFromTree(vNum, INT_MAX);
+    std::vector<bool> minTreeSet(vNum, false);  // if i-element is set to True, than i-vertices has been placed in the tree set
 
    //pick the first node
     minDistanceFromTree[0] = 0;
     parent[0] = -1;
-    //minTreeSet[0] = true;
 
     for (int count = 0; count < vNum-1; ++count){
         //find and add to tree path a node 'u' such that distance from the tree to it is smallest
-        int u = bestVertexIndex(minDistanceFromTree, minTreeSet);
+        int u = bestVertexIndex(minDistanceFromTree, minTreeSet, vNum);
         minTreeSet[u] = true;
 
         //Update vertices' distance from the tree
@@ -38,10 +29,10 @@ void Search::heuristic(){
             }
         }
     }
-    printTree(parent);
+    printTree(parent, vNum);
 }
 
-int Search::bestVertexIndex(int minDistanceFromTree[], bool treeSet[]){
+int Search::bestVertexIndex(std::vector<int> minDistanceFromTree, std::vector<bool> treeSet, int vNum){
     int minIndex;
     int min = INT_MAX;
     //int vNum = graph->getVerticesNum();
@@ -55,8 +46,7 @@ int Search::bestVertexIndex(int minDistanceFromTree[], bool treeSet[]){
     return minIndex;
 }
 
-void Search::printTree(int parent[]){
-    //int vNum = graph->getVerticesNum();
+void Search::printTree(std::vector<int> parent, int vNum){
     printf("Edge   Weight\n");
     int sum = 0;
     for (int i = 1; i < vNum; i++){
