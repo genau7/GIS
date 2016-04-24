@@ -1,24 +1,23 @@
 #include "search.h"
 #include <stdio.h>
 
-Frontier::Frontier(int vNum){
-    openedIndexes.resize(vNum, false);
-}
-
 bool Frontier::contains(Node *node){
-    this->vNum = vNum;
-    openedIndexes.assign(vNum, false);
+    std::vector<Node*> copy(opened.size());
+    std::copy(&(opened.top()), &(opened.top()) + opened.size(), &copy[0]);
+    for(std::vector<Node*>::iterator it = copy.begin(); it != copy.end(); ++it) {
+        if((*it) == node )
+            return true;
+    }
+    return false;
 }
 
 void Frontier::push(Node *node){
     opened.push(node);
-    openedIndexes[node->getIndex()] = true;
 }
 
 Node* Frontier::pop(){
     Node* node = opened.top();
     opened.pop();
-    openedIndexes[node->getIndex()] = false;
     return node;
 }
 Node* Frontier::top(){
@@ -29,41 +28,63 @@ bool Frontier::empty(){
     return opened.empty();
 }
 
-void Frontier::print(){
+//TODO test this below
+void Frontier::remove(Node *node){
+    if(node == opened.top())
+        opened.pop();
+    else {
+        std::vector<Node*> copy(opened.size());
+        std::copy(&(opened.top()), &(opened.top()) + opened.size(), &copy[0]);
+        for(std::vector<Node*>::iterator it = copy.begin(); it != copy.end(); ++it) {
+            if((*it) == node ){
+                copy.erase(it);
+                break;
+            }
+        }
+
+        std::priority_queue<Node*, std::vector<Node*>, LessByCost > updatedQ;
+        for(std::vector<Node*>::iterator it = copy.begin(); it != copy.end(); ++it) {
+            updatedQ.push(*it);
+        }
+
+        this->opened = updatedQ;
+    }
 
 }
 
-Search::Search(Graph* graph){
+Search::Search(Graph *graph, int startIndex, int goalIndex){
     this->graph = graph;
     this->totalCost = INT_MAX;
+    this->startIndex = startIndex;
+    this->goalIndex = goalIndex;
 }
 
 bool Search::isGoal(Node *node){
-    if (node->getIndex() == this->startIndex)
+    if (node->getIndex() == this->goalIndex)
         return true;
     return false;
 }
 
 void Search::findPath(){
     int vNum = graph->getVerticesNum();
-    Frontier frontier(vNum);
-    int h[]={7,6,2,1,0}; //temp
+    Frontier frontier;
+    int h[]={7,6,4,2,0}; //temp
 
     std::set<int> closedIndexes;
 
     //init values and choose a starting point
     startIndex = 0;
-    Node* initNode = new Node(startIndex);//change to random, from parameter?
+    Node* initNode = new Node(startIndex);
     initNode->updateCost(h[startIndex]); //calc heuristic instead here
     initNode->setParent(NULL);
     frontier.push(initNode);
 
-    int i = startIndex;
+    int iteration = 0;
     Node* lowestRank = NULL;
     Node* current = NULL;
-    while(++i){
+    while(++iteration){
         lowestRank = frontier.top();
-        if(i != 1 && isGoal(lowestRank))
+        if(iteration != 1 && isGoal(lowestRank))
             break; //reached the destination
 
         current = frontier.pop();
@@ -74,14 +95,12 @@ void Search::findPath(){
             if(!graph->edgeExists(current->getIndex(), i))
                 continue;
 
-            Node* neighbor = new Node(i);
+            Node* neighbor = new Node(i, current);
             int cost = current->backwardCost() + distance(current->getIndex(), neighbor->getIndex());
             int forwardCost = h[i]; //get heuristic
-            neighbor->setParent(current);
             neighbor->updateCost(forwardCost, cost);
-           if(frontier.contains(neighbor) && cost < neighbor->backwardCost()){
-//            if(frontier.end() == neighbor && cost < neighbor->backwardCost()){
-                frontier.pop();//???
+            if(frontier.contains(neighbor) && cost < neighbor->backwardCost()){
+                frontier.remove(neighbor); //TODO test this
             }
             if(closedIndexes.find(neighbor->getIndex())!= closedIndexes.end() && cost < neighbor->backwardCost()){
                 closedIndexes.erase(closedIndexes.find(neighbor->getIndex()));
@@ -90,15 +109,16 @@ void Search::findPath(){
                 frontier.push(neighbor);
             }
         }
-        if(i>vNum*1000)
+        if(iteration>vNum*1000)
             break;
     }
     current = lowestRank;
     this->totalCost = lowestRank->backwardCost();
-    while(current->getParent() != NULL){
+    do {
         path.push_front(current->getIndex());
-    }
-
+        current = current->getParent();
+    } while (current->getParent() != NULL);
+    path.push_front(current->getIndex());
 }
 
 bool Search::nodeInPQ(Node *node, std::priority_queue<Node *> pq){
@@ -161,6 +181,14 @@ void Search::printTree(std::vector<int> parent, int vNum){
     printf("The minimum spanning tree path = %d\n", sum);
 }
 
+void Search::printPath(){
+    printf("Edge   Weight\n");
+    for (int i = 1; i < path.size(); i++){
+        printf("%d - %d    %d \n", path.at(i-1), path.at(i), distance(path.at(i-1), path.at(i)));
+    }
+    printf("A* search tree path total cost = %d\n", this->totalCost);
+}
+
 int Search::distance(int u, int v){
     return graph->at(u,v);
 }
@@ -169,6 +197,12 @@ Node::Node(int index){
     this->index = index;
     h = 0;//
     parent = NULL;
+}
+
+Node::Node(int index, Node *parent){
+    this->index = index;
+    this->parent = parent;
+    this->h = 0;
 }
 
 void Node::updateCost(int h, int g){

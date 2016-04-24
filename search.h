@@ -8,6 +8,7 @@ class Node{
 public:
     Node(){g=h=f=0;}
     Node(int index);
+    Node(int index, Node* parent);
 
     bool operator < (const Node& otherNode);
     bool operator <= (const Node& otherNode);
@@ -44,28 +45,24 @@ struct LessByCost{
 
 class Frontier {
 public:
-    Frontier(int vNum);
+    Frontier(){}
     bool contains(Node* node);
     void push(Node* node);
     Node* pop();
-   // Node* end();
     Node* top();
     void remove(Node* node);
     bool empty();
-    void print();
 private:
-    int vNum;
     std::priority_queue<Node*, std::vector<Node*>, LessByCost > opened;
-    std::vector<bool> openedIndexes;
 
 };
 
 class Search {
 public:
-    Search(Graph* graph);
+    Search(Graph* graph, int startIndex, int goalIndex = 0);
     void findPath();
     int getPathCost();
-
+    void printPath();
     void heuristic();
     int bestVertexIndex(std::vector<int> minDistanceFromTree, std::vector<bool> treeSet, int vNum);
     void printTree(std::vector<int> parent, int vNum);
@@ -76,6 +73,7 @@ private:
     bool nodeInPQ(Node* node, std::priority_queue<Node*> pq);
     bool isGoal(Node* node);
     int startIndex;
+    int goalIndex;
     std::deque<int> path;
     int totalCost;
 };

@@ -8,15 +8,10 @@ int main(int argc, char *argv[])
     Graph graph(data);
     graph.print();
 
-    Search search(&graph);
+    Search search(&graph, 0, 4);
     search.heuristic();
-
-    int i = 0;
-    while(++i){
-        printf("%d\n", i);
-        if(i>10)
-            break;
-    }
+    search.findPath();
+    search.printPath();
 
    /* Node* a = new Node(0);
     Node* b = new Node(1);
