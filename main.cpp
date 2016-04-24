@@ -3,7 +3,7 @@
 int main(int argc, char *argv[])
 {
     //read distance matrix from file into Graph object
-    std::string dataFile = "../GIS/src/tsp5";
+    std::string dataFile = "../GIS/src/test";
     std::vector<std::vector<int> >* data = FileParser::readMatrix(dataFile);
     Graph graph(data);
     graph.print();
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
             break;
     }
 
-    Node* a = new Node(0);
+   /* Node* a = new Node(0);
     Node* b = new Node(1);
     Node* c = new Node(2);
     a->updateCost(50,100);
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     printf("Frontier TOP - index=%d, cost=%d\n", frontier.top()->getIndex(), frontier.top()->cost());
     printf("Frontier end - index=%d, cost=%d\n", frontier.end()->getIndex(), frontier.end()->cost());
     printf("Frontier TOP - index=%d, cost=%d\n", frontier.top()->getIndex(), frontier.top()->cost());
-    printf("Frontier end - index=%d, cost=%d\n", frontier.end()->getIndex(), frontier.end()->cost());
+    printf("Frontier end - index=%d, cost=%d\n", frontier.end()->getIndex(), frontier.end()->cost());*/
 
     return 0;
 }

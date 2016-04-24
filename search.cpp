@@ -25,10 +25,6 @@ Node* Frontier::top(){
     return opened.top();
 }
 
-Node* Frontier::end(){
-    return opened.top();
-}
-
 bool Frontier::empty(){
     return opened.empty();
 }
@@ -39,6 +35,7 @@ void Frontier::print(){
 
 Search::Search(Graph* graph){
     this->graph = graph;
+    this->totalCost = INT_MAX;
 }
 
 bool Search::isGoal(Node *node){
@@ -50,42 +47,57 @@ bool Search::isGoal(Node *node){
 void Search::findPath(){
     int vNum = graph->getVerticesNum();
     Frontier frontier(vNum);
+    int h[]={7,6,2,1,0}; //temp
 
-  //  std::priority_queue<Node*> opened;
-    std::set<Node*> closed;
+    std::set<int> closedIndexes;
 
     //init values and choose a starting point
     startIndex = 0;
-    std::vector<int> parent(vNum);
     Node* initNode = new Node(startIndex);//change to random, from parameter?
-    initNode->updateCost(1000); //calc heuristic instead here
+    initNode->updateCost(h[startIndex]); //calc heuristic instead here
     initNode->setParent(NULL);
     frontier.push(initNode);
-    //closed.insert(initNode);
-    //path.push_back(index);
 
-    //Node* current = frontier.pop();
-    //closed.insert(current);
-    Node* lowestRank = frontier.end();
-    int i = 0;
+    int i = startIndex;
+    Node* lowestRank = NULL;
+    Node* current = NULL;
     while(++i){
+        lowestRank = frontier.top();
         if(i != 1 && isGoal(lowestRank))
             break; //reached the destination
 
+        current = frontier.pop();
+        closedIndexes.insert(current->getIndex());
+
+        //for each neighbor
+        for(int i = 1; i < vNum; i++){
+            if(!graph->edgeExists(current->getIndex(), i))
+                continue;
+
+            Node* neighbor = new Node(i);
+            int cost = current->backwardCost() + distance(current->getIndex(), neighbor->getIndex());
+            int forwardCost = h[i]; //get heuristic
+            neighbor->setParent(current);
+            neighbor->updateCost(forwardCost, cost);
+           if(frontier.contains(neighbor) && cost < neighbor->backwardCost()){
+//            if(frontier.end() == neighbor && cost < neighbor->backwardCost()){
+                frontier.pop();//???
+            }
+            if(closedIndexes.find(neighbor->getIndex())!= closedIndexes.end() && cost < neighbor->backwardCost()){
+                closedIndexes.erase(closedIndexes.find(neighbor->getIndex()));
+            }
+            if(closedIndexes.find(neighbor->getIndex()) == closedIndexes.end() && !frontier.contains(neighbor)){
+                frontier.push(neighbor);
+            }
+        }
         if(i>vNum*1000)
             break;
     }
-
-  /*  for(int i = 1; i < vNum; i++){
-        int g = distance(current->getIndex(), i);
-        int h = 1; //changed to heuristic
-        Node neighbor(i);
-        neighbor.updateCost(h, g);
-        if (frontier.contains(&neighbor)){
-            frontier.pop();
-        }
-
-    }*/
+    current = lowestRank;
+    this->totalCost = lowestRank->backwardCost();
+    while(current->getParent() != NULL){
+        path.push_front(current->getIndex());
+    }
 
 }
 

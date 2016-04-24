@@ -11,6 +11,7 @@ public:
     void print();
     int at(int row, int col);
     int const getVerticesNum();
+    bool edgeExists(int srcIndex, int dstIndex);
     ~Graph();
 private:
     int vNum; //number of vertices

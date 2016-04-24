@@ -28,3 +28,7 @@ int Graph::at(int row, int col){
 int const Graph::getVerticesNum(){
     return vNum;
 }
+
+bool Graph::edgeExists(int srcIndex, int dstIndex){
+    return at(srcIndex,dstIndex) != INT_MAX;
+}

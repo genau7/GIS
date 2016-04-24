@@ -11,11 +11,18 @@ public:
 
     bool operator < (const Node& otherNode);
     bool operator <= (const Node& otherNode);
-    bool operator == (const Node& otherNode);
-
+    bool operator == (Node* otherNode){
+        if(this->getParent() == NULL || otherNode->getParent()==NULL){
+            if(this->getParent() == otherNode->getParent())
+                return this->index==otherNode->index;
+            return false;
+        }
+        return (this->index==otherNode->index) && (this->parent->getIndex()==otherNode->getParent()->getIndex());
+    }
     bool operator >= (const Node& otherNode);
     bool operator > (const Node& otherNode);
-    int cost() const {return g;}
+    int cost() const {return f;}
+    int backwardCost() const { return g;}
     void updateCost(int h, int g = 0);
     int getIndex();
     void setParent(Node* node){parent = node;}
@@ -41,7 +48,7 @@ public:
     bool contains(Node* node);
     void push(Node* node);
     Node* pop();
-    Node* end();
+   // Node* end();
     Node* top();
     void remove(Node* node);
     bool empty();
@@ -57,17 +64,20 @@ class Search {
 public:
     Search(Graph* graph);
     void findPath();
+    int getPathCost();
+
     void heuristic();
     int bestVertexIndex(std::vector<int> minDistanceFromTree, std::vector<bool> treeSet, int vNum);
     void printTree(std::vector<int> parent, int vNum);
 
 private:
     Graph* graph;
-    std::list<int> path;
     int distance(int u, int v);
     bool nodeInPQ(Node* node, std::priority_queue<Node*> pq);
     bool isGoal(Node* node);
     int startIndex;
+    std::deque<int> path;
+    int totalCost;
 };
 
 
