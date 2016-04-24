@@ -155,8 +155,8 @@ void Search::printTree(std::vector<int> parent, int vNum){
     printf("Edge   Weight\n");
     int sum = 0;
     for (int i = 1; i < vNum; i++){
-        printf("%d - %d    %d \n", parent[i], i, distance(i, parent[i]));
-        sum += distance(i,parent[i]);
+        printf("%d - %d    %d \n", parent[i], i, distance(parent[i], i));
+        sum += distance(parent[i], i);
     }
     printf("The minimum spanning tree path = %d\n", sum);
 }

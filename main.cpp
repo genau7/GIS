@@ -8,8 +8,8 @@ int main(int argc, char *argv[])
     Graph graph(data);
     graph.print();
 
-  //  Search search(&graph);
-  //  search.heuristic();
+    Search search(&graph);
+    search.heuristic();
 
     int i = 0;
     while(++i){
