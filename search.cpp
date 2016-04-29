@@ -31,6 +31,10 @@ bool Frontier::empty(){
     return opened.empty();
 }
 
+int Frontier::size(){
+    return opened.size();
+}
+
 //TODO test this below
 void Frontier::remove(Node *node){
     if(node == opened.top())
@@ -86,8 +90,16 @@ void Search::findPath(){
         lowestRank = frontier.top();
         if(iteration != 1 && isGoal(lowestRank))
             break; //reached the destination
+        if(lowestRank->getParentsNum() == vNum-1){
+            Node * goal = new Node(goalIndex, lowestRank);
+            goal->updateCost(0, lowestRank->getCost());
+            lowestRank = goal;
+            break; //found the path, but need to add last node again (cyclic path)
+        }
 
         current = frontier.pop();
+        printf("[%d]: Popped from frontier(%d): ", iteration, frontier.size());
+        current->print();
         closed.insert(current->getIndex());
 
         //for each neighbor of the current vertex
@@ -108,6 +120,8 @@ void Search::findPath(){
             }
             if(closed.find(neighbor->getIndex()) == closed.end() && !frontier.contains(neighbor)){
                 frontier.push(neighbor);
+                printf("Added to frontier: ");
+                neighbor->print();
             }
         }
         if(iteration>vNum*1000)
@@ -129,10 +143,13 @@ void Search::reconstructPath(Node *last){
 
 int Search::heuristic(int start, std::set<int> closed){
     int vNum = graph->getVerticesNum();
+    if(vNum - closed.size() ==1)
+        return distance(start, this->goalIndex);
     std::vector<int> parents(vNum, NONE); //minimum spanning tree path (first node's parent index is -1), indicated by nodes' parent
     std::vector<int> minDistanceFromTree(vNum, INT_MAX);
     std::vector<bool> minTreeSet(vNum, false);  // if i-element is set to True, than i-vertex has been placed in the tree set
     minDistanceFromTree[start] = 0;
+
 
     for (int count = 0; count < vNum-1 - closed.size(); ++count){
         //find and add to tree path node 'u' such that distance from the tree to it is smallest
@@ -209,6 +226,16 @@ Node::Node(int index, Node *parent){
     this->index = index;
     this->parent = parent;
     this->h = 0;
+}
+
+int Node::getParentsNum(){
+    Node *p = parent;
+    int parentsNum = 0;
+    while (p != NULL){
+        parentsNum ++;
+        p = p->getParent();
+    }
+    return parentsNum;
 }
 
 void Node::updateCost(int h, int g){

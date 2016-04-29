@@ -11,7 +11,9 @@ public:
     Node(int index, Node* parent);
     int getCost() const {return f;}
     int getBackwardCost() const { return g;}
+    int getForwardCost() const { return f;}
     int getIndex();
+    int getParentsNum();
     Node * getParent(){return parent;}
     void setParent(Node* node){parent = node;}
     void updateCost(int h, int g = 0);
@@ -38,6 +40,7 @@ public:
     void push(Node* node);
     void remove(Node* node);
     bool empty();
+    int size();
     Node* pop();
     Node* top();
 private:
