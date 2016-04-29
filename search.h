@@ -9,37 +9,25 @@ public:
     Node(){g=h=f=0;}
     Node(int index);
     Node(int index, Node* parent);
-
-    bool operator < (const Node& otherNode);
-    bool operator <= (const Node& otherNode);
-    bool operator == (Node* otherNode){
-        if(this->getParent() == NULL || otherNode->getParent()==NULL){
-            if(this->getParent() == otherNode->getParent())
-                return this->index==otherNode->index;
-            return false;
-        }
-        return (this->index==otherNode->index) && (this->parent->getIndex()==otherNode->getParent()->getIndex());
-    }
-    bool operator >= (const Node& otherNode);
-    bool operator > (const Node& otherNode);
-    int cost() const {return f;}
-    int backwardCost() const { return g;}
-    void updateCost(int h, int g = 0);
+    int getCost() const {return f;}
+    int getBackwardCost() const { return g;}
     int getIndex();
-    void setParent(Node* node){parent = node;}
     Node * getParent(){return parent;}
-    Node* parent;
+    void setParent(Node* node){parent = node;}
+    void updateCost(int h, int g = 0);
+    void print();
+    void printParents();
 private:
     int g; // backward cost (how much does the path cost thus far?)
     int h; // forward cost (how much could the path from this node towards the goal cost?)
     int f; // f = g + h
     int index; //vertex index
-
+    Node* parent;
 };
 
 struct LessByCost{
     bool operator()(Node* aNode, Node* bNode){
-        return aNode->cost() > bNode->cost();
+        return aNode->getCost() > bNode->getCost();
     }
 };
 
@@ -48,13 +36,12 @@ public:
     Frontier(){}
     bool contains(Node* node);
     void push(Node* node);
-    Node* pop();
-    Node* top();
     void remove(Node* node);
     bool empty();
+    Node* pop();
+    Node* top();
 private:
     std::priority_queue<Node*, std::vector<Node*>, LessByCost > opened;
-
 };
 
 class Search {
@@ -63,15 +50,16 @@ public:
     void findPath();
     int getPathCost();
     void printPath();
-    void heuristic();
-    int bestVertexIndex(std::vector<int> minDistanceFromTree, std::vector<bool> treeSet, int vNum);
+    int heuristic(int start, std::set<int> closed);
+    int bestVertexIndex(std::vector<int> minDistanceFromTree, std::vector<bool> treeSet, int vNum, std::set<int> closed);
     void printTree(std::vector<int> parent, int vNum);
 
 private:
-    Graph* graph;
+    int calcPathCost(std::vector<int> parents);
     int distance(int u, int v);
-    bool nodeInPQ(Node* node, std::priority_queue<Node*> pq);
     bool isGoal(Node* node);
+    void reconstructPath(Node * last);
+    Graph* graph;
     int startIndex;
     int goalIndex;
     std::deque<int> path;

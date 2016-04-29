@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     graph.print();
 
     Search search(&graph, 0, 4);
-    search.heuristic();
+   // search.heuristic();
     search.findPath();
     search.printPath();
 
