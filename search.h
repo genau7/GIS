@@ -14,11 +14,13 @@ public:
     int getForwardCost() const { return f;}
     int getIndex();
     int getParentsNum();
+    std::set<int> path2IndexSet();
     Node * getParent(){return parent;}
     void setParent(Node* node){parent = node;}
     void updateCost(int h, int g = 0);
     void print();
     void printParents();
+    bool hasValidParents();
 private:
     int g; // backward cost (how much does the path cost thus far?)
     int h; // forward cost (how much could the path from this node towards the goal cost?)
@@ -49,11 +51,12 @@ private:
 
 class Search {
 public:
-    Search(Graph* graph, int startIndex, int goalIndex = 0);
-    void findPath();
+    Search(Graph* graph);
+    void findPath(int startIndex = 0);
     int getPathCost();
     void printPath();
-    int heuristic(int start, std::set<int> closed);
+    int heuristic0(int start, std::set<int> closed);
+    int heuristic(int start, Node* lastNode);
     int bestVertexIndex(std::vector<int> minDistanceFromTree, std::vector<bool> treeSet, int vNum, std::set<int> closed);
     void printTree(std::vector<int> parent, int vNum);
 

@@ -59,11 +59,9 @@ void Frontier::remove(Node *node){
 
 }
 
-Search::Search(Graph *graph, int startIndex, int goalIndex){
+Search::Search(Graph *graph){
     this->graph = graph;
     this->totalCost = INT_MAX;
-    this->startIndex = startIndex;
-    this->goalIndex = goalIndex;
 }
 
 bool Search::isGoal(Node *node){
@@ -72,14 +70,15 @@ bool Search::isGoal(Node *node){
     return false;
 }
 
-void Search::findPath(){
+void Search::findPath(int startIndex){
+    this->goalIndex = startIndex;
     int vNum = graph->getVerticesNum();
     Frontier frontier;
     std::set<int> closed;
 
     //init values for the starting point
     Node* initNode = new Node(startIndex);
-    initNode->updateCost(heuristic(startIndex, closed));
+    initNode->updateCost(heuristic(startIndex, initNode));
     initNode->setParent(NULL);
     frontier.push(initNode);
 
@@ -103,22 +102,27 @@ void Search::findPath(){
         closed.insert(current->getIndex());
 
         //for each neighbor of the current vertex
-        for(int i = 1; i < vNum; i++){
+        for(int i = 0; i < vNum; i++){
             if(!graph->edgeExists(current->getIndex(), i))
                 continue;
 
             Node* neighbor = new Node(i, current);
+            if (!neighbor->hasValidParents())
+                continue;
             int cost = current->getBackwardCost() + distance(current->getIndex(), neighbor->getIndex());
-            int forwardCost = heuristic(i, closed);
+            int forwardCost = heuristic(i, neighbor);
             neighbor->updateCost(forwardCost, cost);
-            //neighbor->print();
+            neighbor->print();
             if(frontier.contains(neighbor) && cost < neighbor->getBackwardCost()){
+                printf("ATTENTION!! DANGER ZONE!!!\n");
                 frontier.remove(neighbor); //TODO test this
             }
             if(closed.find(neighbor->getIndex())!= closed.end() && cost < neighbor->getBackwardCost()){
                 closed.erase(closed.find(neighbor->getIndex()));
             }
-            if(closed.find(neighbor->getIndex()) == closed.end() && !frontier.contains(neighbor)){
+            bool notExpandedYet = closed.find(neighbor->getIndex()) == closed.end() && !frontier.contains(neighbor);
+            int nodesNumInPath = neighbor->getParentsNum() + 1;
+            if(notExpandedYet || nodesNumInPath == vNum){
                 frontier.push(neighbor);
                 printf("Added to frontier: ");
                 neighbor->print();
@@ -141,7 +145,41 @@ void Search::reconstructPath(Node *last){
     path.push_front(current->getIndex());
 }
 
-int Search::heuristic(int start, std::set<int> closed){
+int Search::heuristic(int start, Node* lastNode){
+
+    std::set<int> closed =lastNode->path2IndexSet() ;
+    int vNum = graph->getVerticesNum();
+    if(vNum - closed.size() ==1)
+        return distance(start, this->goalIndex);
+    std::vector<int> parents(vNum, NONE); //minimum spanning tree path (first node's parent index is -1), indicated by nodes' parent
+    std::vector<int> minDistanceFromTree(vNum, INT_MAX);
+    std::vector<bool> minTreeSet(vNum, false);  // if i-element is set to True, than i-vertex has been placed in the tree set
+    minDistanceFromTree[start] = 0;
+
+
+    for (int count = 0; count < vNum-1 - closed.size(); ++count){
+        //find and add to tree path node 'u' such that distance from the tree to it is smallest
+        int u = bestVertexIndex(minDistanceFromTree, minTreeSet, vNum, closed);
+        if (u == NONE) //we reached the goal //TODO check if works for both TSP and no TSP
+            return 0;
+        minTreeSet[u] = true;
+
+        //Update vertices' distance from the tree
+        for (int v = 0; v < vNum; ++v){
+            // Update the distance only if graph[u][v] is smaller than key[v]
+            if (distance(u,v) != INT_MAX && minTreeSet[v] == false && distance(u,v) <  minDistanceFromTree[v] & closed.find(v) == closed.end()){
+                parents[v]  = u;
+                minDistanceFromTree[v] = distance(u,v);
+            }
+        }
+    }
+    int temp=0;
+    temp++;
+   // printTree(parents, vNum);
+    return calcPathCost(parents);
+}
+
+int Search::heuristic0(int start, std::set<int> closed){
     int vNum = graph->getVerticesNum();
     if(vNum - closed.size() ==1)
         return distance(start, this->goalIndex);
@@ -263,7 +301,24 @@ void Node::printParents(){
     printf("\n");
 }
 
+std::set<int> Node::path2IndexSet(){
+    std::set<int> pathSet;
+    Node* n = parent;
+    while (n != NULL){
+        pathSet.insert(n->index);
+        n = n->parent;
+    }
+    return pathSet;
+}
 
+bool Node::hasValidParents(){
+    std::set<int> parentsIndexes = path2IndexSet();
+    //if this node's index is different than any of its parents, return true
+    if (parentsIndexes.find(this->index) == parentsIndexes.end())
+        return true;
+    return false;
+
+}
 
 
 
