@@ -7,27 +7,9 @@ int main(int argc, char *argv[])
     std::string dataFile = "../GIS/src/5/tsp5b"; //23 not prepared yet
     std::vector<std::vector<int> >* data = FileParser::readMatrix(dataFile);
     Graph graph(data);
-    //std::string startTime, endTime;
-   // time_t startRawtime;
-    //time_t stopRawtime;
     unsigned long startTime, endTime;
-   //struct tm * startTime;
-//   struct tm * endTime;
-   // Search search(&graph);
     int s = 0;
     int vNum = graph.getVerticesNum();
-   /* for (int i = 0; i < 1; i++){
-        printf("===========================\nStarting at node %d\n", s);
-       // time(&startRawtime);
-       // startTime = std::localtime(&startRawtime);
-        startTime = std::time(NULL);
-        Search search(&graph);
-        search.findPath(s);
-       // time(&stopRawtime);
-       // endTime = std::localtime(&stopRawtime);
-        endTime = std::time(NULL);
-        search.printPath();
-    }*/
 
     //calculate normal
     Search searchLegal(&graph);
@@ -41,7 +23,7 @@ int main(int argc, char *argv[])
     //change x values to 9999 and check how this influences the result
     for (int i = 0; i < 1; i++){
         graph.makeIllegal(10);
-        graph.print();
+        //graph.print();
         startTime = std::time(NULL);
         Search search(&graph);
         search.findPath(0);
@@ -49,8 +31,6 @@ int main(int argc, char *argv[])
         search.printPath();
         printf("Calculation took %lu seconds.\n", endTime - startTime);
     }
-   // printf("Calculation took %lu seconds.\n", endTime - startTime);
-
 
     return 0;
 }

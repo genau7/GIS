@@ -78,7 +78,6 @@ void Search::findPath(int startIndex){
 
     //init values for the starting point
     Node* initNode = new Node(startIndex);
-   // initNode->updateCost(heuristic2(goalIndex, initNode));
     initNode->updateCost(heuristic(startIndex, initNode));
     initNode->setParent(NULL);
     frontier.push(initNode);
@@ -115,31 +114,12 @@ void Search::findPath(int startIndex){
             if (!neighbor->hasValidParents())
                 continue;
             int cost = current->getBackwardCost() + distance(current->getIndex(), neighbor->getIndex());
-            //int forwardCost = heuristic2(goalIndex, neighbor);
             int forwardCost = heuristic(i, neighbor);
             neighbor->updateCost(forwardCost, cost);
             //neighbor->print();
-           // bool inClosed = closed.find(neighbor->getIndex())!= closed.end();
-           // bool costMatters = cost < neighbor->getBackwardCost();
-           // bool admissable = heuristicIsAdmissable(current, neighbor);
-           // if(!admissable){
-           //     closed.erase(neighbor->getIndex());
-           // }
-            /*if(frontier.contains(neighbor) && cost < neighbor->getBackwardCost()){
-                            printf("ATTENTION!! DANGER ZONE!!!\n");
-                            frontier.remove(neighbor); //TODO test this
-                        }
-            inClosed = closed.find(neighbor->getIndex())!= closed.end();
-            if(closed.find(neighbor->getIndex())!= closed.end() && cost < neighbor->getBackwardCost()){
-                closed.erase(closed.find(neighbor->getIndex()));
-            }*/
-           // bool notExpandedYet = closed.find(neighbor->getIndex()) == closed.end() && !frontier.contains(neighbor);
-           // int nodesNumInPath = neighbor->getParentsNum() + 1;
-           // if(notExpandedYet || nodesNumInPath == vNum || true){
             frontier.push(neighbor);
-                //printf("Added to frontier: ");
-                //neighbor->print();
-           // }
+            //printf("Added to frontier: ");
+            //neighbor->print();
         }
         /*if(iteration>vNum*100000){
             printf("Broke search iteration because it took more than the threshold value of %d\n");
@@ -208,36 +188,6 @@ int Search::heuristic(int start, Node* lastNode){
     }
     int temp=0;
     temp++;
-   // printTree(parents, vNum);
-    return calcPathCost(parents);
-}
-
-int Search::heuristic0(int start, std::set<int> closed){
-    int vNum = graph->getVerticesNum();
-    if(vNum - closed.size() ==1)
-        return distance(start, this->goalIndex);
-    std::vector<int> parents(vNum, NONE); //minimum spanning tree path (first node's parent index is -1), indicated by nodes' parent
-    std::vector<int> minDistanceFromTree(vNum, INT_MAX);
-    std::vector<bool> minTreeSet(vNum, false);  // if i-element is set to True, than i-vertex has been placed in the tree set
-    minDistanceFromTree[start] = 0;
-
-
-    for (int count = 0; count < vNum-1 - closed.size(); ++count){
-        //find and add to tree path node 'u' such that distance from the tree to it is smallest
-        int u = bestVertexIndex(minDistanceFromTree, minTreeSet, vNum, closed);
-        if (u == NONE) //we reached the goal //TODO check if works for both TSP and no TSP
-            return 0;
-        minTreeSet[u] = true;
-
-        //Update vertices' distance from the tree
-        for (int v = 0; v < vNum; ++v){
-            // Update the distance only if graph[u][v] is smaller than key[v]
-            if (distance(u,v) != INT_MAX && minTreeSet[v] == false && distance(u,v) <  minDistanceFromTree[v] & closed.find(v) == closed.end()){
-                parents[v]  = u;
-                minDistanceFromTree[v] = distance(u,v);
-            }
-        }
-    }
    // printTree(parents, vNum);
     return calcPathCost(parents);
 }
