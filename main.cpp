@@ -1,17 +1,17 @@
 #include "search.h"
-#include <ctime>
 
 int main(int argc, char *argv[])
 {
     //read distance matrix from file into Graph object
     std::string dataFile = "../GIS/src/5/tsp5b"; //23 not prepared yet
-    std::vector<std::vector<int> >* data = FileParser::readMatrix(dataFile);
+    std::vector<std::vector<int> > data = *(FileParser::readMatrix(dataFile));
+    std::vector<std::vector<int> > originalData = *(FileParser::readMatrix(dataFile));
+
     Graph graph(data);
     std::vector<Result> results;
+    std::srand(std::time(NULL));
     int vNum = graph.getVerticesNum();
-
     unsigned long startTime, endTime;
-    int s = 0;
 
     //calculate normal
     Search searchLegal(&graph);
@@ -24,24 +24,27 @@ int main(int argc, char *argv[])
     //searchLegal.printPath();
     printf("Calculation took %lu seconds.\n", endTime - startTime);
 
-    int testRuns = 10;
-    int illegalVals[] = {1,2,3,4,5,6,7,8,9,10};
+    int testRuns = 5;
+    float illegalValsPerRow[] = {0.5, 0.5, 0.5, 0.5, 0.5};
     int edgesNum = vNum*(vNum-1);
 
     //change x values to 9999 and check how this influences the result
     for (int i = 0; i < testRuns; i++){
-        int illegalEdges = illegalVals[i];
-        float illegalPercentage = 1.0*illegalEdges/edgesNum*100.0;
+        float illegalEdges = illegalValsPerRow[i];
+      //  float illegalPercentage = 1.0*illegalEdges/edgesNum*100.0;
         printf("===========================\n");
-        printf("Starting illegal search with %d(%.1f%) illegal edges\n", illegalEdges, illegalPercentage);
-        graph.makeIllegal(illegalVals[i]);
+       // graph.makeIllegal(illegalVals[i]);
+        graph.makeSomeEgdesIllegal(0.5);
+        graph.print();
+        printf("Starting illegal search with %d(%.1f%) illegal edges\n", graph.illegalEdgesNum(), graph.illegalEdgesNum()*1.0/edgesNum*100.0 );
         startTime = std::time(NULL);
         Search search(&graph);
         Result result = search.findPath(0);
         endTime = std::time(NULL);
-        result.update(endTime-startTime, dataFile, illegalEdges);
+        result.update(endTime-startTime, dataFile, graph.illegalEdgesNum());
         results.push_back(result);
         result.print();
+        graph.updateData(originalData);
     }
 
     return 0;
