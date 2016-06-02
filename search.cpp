@@ -70,7 +70,7 @@ bool Search::isGoal(Node *node){
     return false;
 }
 
-void Search::findPath(int startIndex){
+Result Search::findPath(int startIndex){
     this->goalIndex = startIndex;
     int vNum = graph->getVerticesNum();
     Frontier frontier;
@@ -126,8 +126,8 @@ void Search::findPath(int startIndex){
             break;
         }*/
     }
-    printf("Iteration finished at i=%d.\n", iteration);
     reconstructPath(lowestRank);
+    return prepareResult(iteration);
 }
 
 void Search::reconstructPath(Node *last){
@@ -139,6 +139,31 @@ void Search::reconstructPath(Node *last){
     } while (current->getParent() != NULL);
 
     path.push_front(current->getIndex());
+}
+
+Result Search::prepareResult(int numIterations){
+    int illegalEdgesNum = 0;
+    for (int i = 1; i < path.size(); i++){
+        int edgeWeight = distance(path.at(i-1), path.at(i));
+        bool edgeIllegal = edgeWeight == BIG_WEIGHT;
+        if(edgeIllegal)
+            illegalEdgesNum++;
+    }
+    Result result(numIterations, graph->getVerticesNum(), illegalEdgesNum, totalCost, path);
+    return result;
+}
+
+void Search::printPath(){
+    printf("Edge   Weight\n");
+    int forbiddenEdgesNum = 0;
+    for (int i = 1; i < path.size(); i++){
+        int edgeWeight = distance(path.at(i-1), path.at(i));
+        bool edgeIllegal = edgeWeight == BIG_WEIGHT;
+        if(edgeIllegal)
+            forbiddenEdgesNum++;
+        printf("%d - %d    %d    illegal=%d\n", path.at(i-1), path.at(i), edgeWeight, edgeIllegal);
+    }
+    printf("A* search found path with total cost = %d and %d illegal edge(s).\n", this->totalCost, forbiddenEdgesNum);
 }
 int Search::heuristic2(int goal, Node *lastNode){
     std::set<int> closed =lastNode->path2IndexSet() ;
@@ -225,18 +250,6 @@ void Search::printTree(std::vector<int> parent, int vNum){
     printf("The minimum spanning tree path = %d\n", sum);
 }
 
-void Search::printPath(){
-    printf("Edge   Weight\n");
-    int forbiddenEdgesNum = 0;
-    for (int i = 1; i < path.size(); i++){
-        int edgeWeight = distance(path.at(i-1), path.at(i));
-        bool edgeIllegal = edgeWeight == BIG_WEIGHT;
-        if(edgeIllegal)
-            forbiddenEdgesNum++;
-        printf("%d - %d    %d    illegal=%d\n", path.at(i-1), path.at(i), edgeWeight, edgeIllegal);
-    }
-    printf("A* search found path with total cost = %d and %d illegal edge(s).\n", this->totalCost, forbiddenEdgesNum);
-}
 
 int Search::distance(int u, int v){
     return graph->at(u,v);

@@ -10,10 +10,12 @@ TEMPLATE = app
 SOURCES += main.cpp \
     graph.cpp \
     util.cpp \
-    search.cpp
+    search.cpp \
+    result.cpp
 
 HEADERS += \
     graph.h \
     util.h \
-    search.h
+    search.h \
+    result.h
 

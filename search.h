@@ -1,9 +1,6 @@
 #ifndef SEARCH_H
 #define SEARCH_H
-
-#include "graph.h"
-
-
+#include "result.h"
 
 class Node{
 public:
@@ -53,7 +50,8 @@ private:
 class Search {
 public:
     Search(Graph* graph);
-    void findPath(int startIndex = 0);
+    Result findPath(int startIndex = 0);
+    Result prepareResult(int numIterations);
     int getPathCost();
     void printPath();
     int heuristic(int start, Node* lastNode);
