@@ -78,6 +78,7 @@ void Search::findPath(int startIndex){
 
     //init values for the starting point
     Node* initNode = new Node(startIndex);
+   // initNode->updateCost(heuristic2(goalIndex, initNode));
     initNode->updateCost(heuristic(startIndex, initNode));
     initNode->setParent(NULL);
     frontier.push(initNode);
@@ -96,9 +97,13 @@ void Search::findPath(int startIndex){
             break; //found the path, but need to add last node again (cyclic path)
         }
 
+        if(frontier.size()==0){
+            printf("No more nodes to search the path from. Failed!\n");
+            break;
+        }
         current = frontier.pop();
-        printf("[%d]: Popped from frontier(%d): ", iteration, frontier.size());
-        current->print();
+        //printf("[%d]: Popped from frontier(%d): ", iteration, frontier.size());
+        //current->print();
         closed.insert(current->getIndex());
 
         //for each neighbor of the current vertex
@@ -110,27 +115,34 @@ void Search::findPath(int startIndex){
             if (!neighbor->hasValidParents())
                 continue;
             int cost = current->getBackwardCost() + distance(current->getIndex(), neighbor->getIndex());
+            //int forwardCost = heuristic2(goalIndex, neighbor);
             int forwardCost = heuristic(i, neighbor);
             neighbor->updateCost(forwardCost, cost);
-            neighbor->print();
-            if(frontier.contains(neighbor) && cost < neighbor->getBackwardCost()){
-                printf("ATTENTION!! DANGER ZONE!!!\n");
-                frontier.remove(neighbor); //TODO test this
-            }
+            //neighbor->print();
+            bool inClosed = closed.find(neighbor->getIndex())!= closed.end();
+            bool costMatters = cost < neighbor->getBackwardCost();
+            /*if(frontier.contains(neighbor) && cost < neighbor->getBackwardCost()){
+                            printf("ATTENTION!! DANGER ZONE!!!\n");
+                            frontier.remove(neighbor); //TODO test this
+                        }
+            inClosed = closed.find(neighbor->getIndex())!= closed.end();
             if(closed.find(neighbor->getIndex())!= closed.end() && cost < neighbor->getBackwardCost()){
                 closed.erase(closed.find(neighbor->getIndex()));
-            }
+            }*/
             bool notExpandedYet = closed.find(neighbor->getIndex()) == closed.end() && !frontier.contains(neighbor);
             int nodesNumInPath = neighbor->getParentsNum() + 1;
-            if(notExpandedYet || nodesNumInPath == vNum){
+            if(notExpandedYet || nodesNumInPath == vNum || true){
                 frontier.push(neighbor);
-                printf("Added to frontier: ");
-                neighbor->print();
+                //printf("Added to frontier: ");
+                //neighbor->print();
             }
         }
-        if(iteration>vNum*1000)
+        /*if(iteration>vNum*100000){
+            printf("Broke search iteration because it took more than the threshold value of %d\n");
             break;
+        }*/
     }
+    printf("Iteration finished at i=%d.\n", iteration);
     reconstructPath(lowestRank);
 }
 
@@ -143,6 +155,23 @@ void Search::reconstructPath(Node *last){
     } while (current->getParent() != NULL);
 
     path.push_front(current->getIndex());
+}
+int Search::heuristic2(int goal, Node *lastNode){
+    std::set<int> closed =lastNode->path2IndexSet() ;
+    int vNum = graph->getVerticesNum();
+    int edgesLeftTillGoal = vNum - lastNode->getParentsNum();
+
+    int minDistance = INT_MAX;
+    for (int v = 0; v < vNum; v++){
+        if (closed.find(v) == closed.end()) {
+            if(distance(lastNode->getIndex(), v) < minDistance)
+                minDistance = distance(lastNode->getIndex(), v);
+        }
+    }
+    if (minDistance == INT_MAX)
+        return distance(lastNode->getIndex(), goal);
+
+    return edgesLeftTillGoal * minDistance;
 }
 
 int Search::heuristic(int start, Node* lastNode){
@@ -247,7 +276,7 @@ void Search::printPath(){
     for (int i = 1; i < path.size(); i++){
         printf("%d - %d    %d \n", path.at(i-1), path.at(i), distance(path.at(i-1), path.at(i)));
     }
-    printf("A* search tree path total cost = %d\n", this->totalCost);
+    printf("A* search found path with total cost = %d\n", this->totalCost);
 }
 
 int Search::distance(int u, int v){

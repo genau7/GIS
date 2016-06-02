@@ -57,6 +57,7 @@ public:
     void printPath();
     int heuristic0(int start, std::set<int> closed);
     int heuristic(int start, Node* lastNode);
+    int heuristic2(int goal, Node* lastNode);
     int bestVertexIndex(std::vector<int> minDistanceFromTree, std::vector<bool> treeSet, int vNum, std::set<int> closed);
     void printTree(std::vector<int> parent, int vNum);
 

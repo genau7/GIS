@@ -3,17 +3,23 @@
 int main(int argc, char *argv[])
 {
     //read distance matrix from file into Graph object
-    std::string dataFile = "../GIS/src/tsp5b";
+    std::string dataFile = "../GIS/src/tsp10a"; //6b, 7a sucks
     //std::string dataFile = "../GIS/src/test"; //not a A/TSP
     std::vector<std::vector<int> >* data = FileParser::readMatrix(dataFile);
     Graph graph(data);
     graph.print();
 
-    int start = 4;
-    printf("===========================\nStarting at node %d\n", start);
-    Search search(&graph);
-    search.findPath(start);
-    search.printPath();
+    int start = 0;
+
+   // Search search(&graph);
+    int vNum = graph.getVerticesNum();
+    for (int i = 0; i < vNum; i++){
+        printf("===========================\nStarting at node %d\n", i);
+        Search search(&graph);
+        search.findPath(i);
+        search.printPath();
+    }
+
 
 
    /* Node* a = new Node(0);
