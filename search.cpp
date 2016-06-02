@@ -119,8 +119,12 @@ void Search::findPath(int startIndex){
             int forwardCost = heuristic(i, neighbor);
             neighbor->updateCost(forwardCost, cost);
             //neighbor->print();
-            bool inClosed = closed.find(neighbor->getIndex())!= closed.end();
-            bool costMatters = cost < neighbor->getBackwardCost();
+           // bool inClosed = closed.find(neighbor->getIndex())!= closed.end();
+           // bool costMatters = cost < neighbor->getBackwardCost();
+           // bool admissable = heuristicIsAdmissable(current, neighbor);
+           // if(!admissable){
+           //     closed.erase(neighbor->getIndex());
+           // }
             /*if(frontier.contains(neighbor) && cost < neighbor->getBackwardCost()){
                             printf("ATTENTION!! DANGER ZONE!!!\n");
                             frontier.remove(neighbor); //TODO test this
@@ -129,13 +133,13 @@ void Search::findPath(int startIndex){
             if(closed.find(neighbor->getIndex())!= closed.end() && cost < neighbor->getBackwardCost()){
                 closed.erase(closed.find(neighbor->getIndex()));
             }*/
-            bool notExpandedYet = closed.find(neighbor->getIndex()) == closed.end() && !frontier.contains(neighbor);
-            int nodesNumInPath = neighbor->getParentsNum() + 1;
-            if(notExpandedYet || nodesNumInPath == vNum || true){
-                frontier.push(neighbor);
+           // bool notExpandedYet = closed.find(neighbor->getIndex()) == closed.end() && !frontier.contains(neighbor);
+           // int nodesNumInPath = neighbor->getParentsNum() + 1;
+           // if(notExpandedYet || nodesNumInPath == vNum || true){
+            frontier.push(neighbor);
                 //printf("Added to frontier: ");
                 //neighbor->print();
-            }
+           // }
         }
         /*if(iteration>vNum*100000){
             printf("Broke search iteration because it took more than the threshold value of %d\n");
@@ -273,15 +277,28 @@ void Search::printTree(std::vector<int> parent, int vNum){
 
 void Search::printPath(){
     printf("Edge   Weight\n");
+    int forbiddenEdgesNum = 0;
     for (int i = 1; i < path.size(); i++){
-        printf("%d - %d    %d \n", path.at(i-1), path.at(i), distance(path.at(i-1), path.at(i)));
+        int edgeWeight = distance(path.at(i-1), path.at(i));
+        bool edgeIllegal = edgeWeight == BIG_WEIGHT;
+        if(edgeIllegal)
+            forbiddenEdgesNum++;
+        printf("%d - %d    %d    illegal=%d\n", path.at(i-1), path.at(i), edgeWeight, edgeIllegal);
     }
-    printf("A* search found path with total cost = %d\n", this->totalCost);
+    printf("A* search found path with total cost = %d and %d illegal edge(s).\n", this->totalCost, forbiddenEdgesNum);
 }
 
 int Search::distance(int u, int v){
     return graph->at(u,v);
 }
+bool Search::heuristicIsAdmissable(Node *current, Node *next){
+    int dist = distance(current->getIndex(), next->getIndex());
+    if (current->getForwardCost() - next->getForwardCost() <= dist)
+        return true;
+    return false;
+}
+
+//================================== Node ================================
 
 Node::Node(int index){
     this->index = index;

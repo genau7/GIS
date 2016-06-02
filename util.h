@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <limits.h>
 
+const int BIG_WEIGHT = 9999;
+
 class FileParser
 {
 public:

@@ -29,10 +29,11 @@ std::vector<std::vector<int> >* FileParser::readMatrix(std::string filename){
         for(int col=0; col<vNum; col++){
             int distance;
             file >> distance;
-            if(distance == 9999) distance = INT_MAX;
+            if(distance == 0) distance = INT_MAX;
             int* cell = &(data->at(row).at(col));
             *cell = distance;
         }
     }
+    printf("Read data successfully.\n");
     return data;
 }

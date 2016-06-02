@@ -12,6 +12,7 @@ public:
     int at(int row, int col);
     int const getVerticesNum();
     bool edgeExists(int srcIndex, int dstIndex);
+    void makeIllegal(int num);
     ~Graph();
 private:
     int vNum; //number of vertices

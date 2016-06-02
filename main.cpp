@@ -1,56 +1,56 @@
 #include "search.h"
+#include <ctime>
 
 int main(int argc, char *argv[])
 {
     //read distance matrix from file into Graph object
-    std::string dataFile = "../GIS/src/tsp10a"; //6b, 7a sucks
-    //std::string dataFile = "../GIS/src/test"; //not a A/TSP
+    std::string dataFile = "../GIS/src/5/tsp5b"; //23 not prepared yet
     std::vector<std::vector<int> >* data = FileParser::readMatrix(dataFile);
     Graph graph(data);
-    graph.print();
-
-    int start = 0;
-
+    //std::string startTime, endTime;
+   // time_t startRawtime;
+    //time_t stopRawtime;
+    unsigned long startTime, endTime;
+   //struct tm * startTime;
+//   struct tm * endTime;
    // Search search(&graph);
+    int s = 0;
     int vNum = graph.getVerticesNum();
-    for (int i = 0; i < vNum; i++){
-        printf("===========================\nStarting at node %d\n", i);
+   /* for (int i = 0; i < 1; i++){
+        printf("===========================\nStarting at node %d\n", s);
+       // time(&startRawtime);
+       // startTime = std::localtime(&startRawtime);
+        startTime = std::time(NULL);
         Search search(&graph);
-        search.findPath(i);
+        search.findPath(s);
+       // time(&stopRawtime);
+       // endTime = std::localtime(&stopRawtime);
+        endTime = std::time(NULL);
         search.printPath();
+    }*/
+
+    //calculate normal
+    Search searchLegal(&graph);
+    startTime = std::time(NULL);
+    printf("===========================\nStarting normal search\n");
+    searchLegal.findPath(0);
+    endTime = std::time(NULL);
+    searchLegal.printPath();
+    printf("Calculation took %lu seconds.\n", endTime - startTime);
+
+    //change x values to 9999 and check how this influences the result
+    for (int i = 0; i < 1; i++){
+        graph.makeIllegal(10);
+        graph.print();
+        startTime = std::time(NULL);
+        Search search(&graph);
+        search.findPath(0);
+        endTime = std::time(NULL);
+        search.printPath();
+        printf("Calculation took %lu seconds.\n", endTime - startTime);
     }
+   // printf("Calculation took %lu seconds.\n", endTime - startTime);
 
-
-
-   /* Node* a = new Node(0);
-    Node* b = new Node(1);
-    Node* c = new Node(2);
-    a->updateCost(50,100);
-    b->updateCost(20,10);
-    c->updateCost(100,20);
-
-    printf("Nodes costs are followin: %d, %d, %d\n", a->cost(), b->cost(), c->cost());
-
-    Frontier frontier(3);
-    frontier.push(a);
-    frontier.push(b);
-    frontier.push(c);
-    printf("Frontier TOP - index=%d, cost=%d\n", frontier.top()->getIndex(), frontier.top()->cost());
-    printf("Frontier end - index=%d, cost=%d\n\n", frontier.end()->getIndex(), frontier.end()->cost());
-
-    Node* d = new Node(6);
-    Node* e = new Node(7);
-    Node* f = new Node(8);
-    d->updateCost(0,5);
-    e->updateCost(0,    15);
-    f->updateCost(0,25);
-    frontier.push(d);
-    frontier.push(e);
-    frontier.push(f);
-    printf("Frontier TOP - index=%d, cost=%d\n", frontier.top()->getIndex(), frontier.top()->cost());
-    printf("Frontier end - index=%d, cost=%d\n", frontier.end()->getIndex(), frontier.end()->cost());
-    printf("Frontier TOP - index=%d, cost=%d\n", frontier.top()->getIndex(), frontier.top()->cost());
-    printf("Frontier end - index=%d, cost=%d\n", frontier.end()->getIndex(), frontier.end()->cost());*/
 
     return 0;
 }

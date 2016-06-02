@@ -4,6 +4,7 @@
 #include "graph.h"
 
 
+
 class Node{
 public:
     Node(){g=h=f=0;}
@@ -60,6 +61,7 @@ public:
     int heuristic2(int goal, Node* lastNode);
     int bestVertexIndex(std::vector<int> minDistanceFromTree, std::vector<bool> treeSet, int vNum, std::set<int> closed);
     void printTree(std::vector<int> parent, int vNum);
+    bool heuristicIsAdmissable(Node * current, Node* next);
 
 private:
     int calcPathCost(std::vector<int> parents);

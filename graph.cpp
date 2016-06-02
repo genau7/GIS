@@ -32,3 +32,13 @@ int const Graph::getVerticesNum(){
 bool Graph::edgeExists(int srcIndex, int dstIndex){
     return at(srcIndex,dstIndex) != INT_MAX;
 }
+
+void Graph::makeIllegal(int num){
+    for (int i = 0; i < num; i++){
+        int row = i/vNum;
+        int col = i-vNum*row;
+        if(at(row,col) != INT_MAX){
+            data->at(row).at(col) = BIG_WEIGHT;
+        }
+    }
+}
