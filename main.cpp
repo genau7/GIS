@@ -3,13 +3,13 @@
 int main(int argc, char *argv[])
 {
     //read distance matrix from file into Graph object
-    std::string dataFile = "../GIS/src/tsp7"; //
+    std::string dataFile = "../GIS/res/tsp7"; //
     std::vector<std::vector<int> > data = *(FileParser::readMatrix(dataFile));
     std::vector<std::vector<int> > originalData = *(FileParser::readMatrix(dataFile));
     int temp;
     std::cin>>temp;
     Graph graph(data);
-    graph.print();
+    //graph.print();
     std::vector<Result> results;
     std::srand(std::time(NULL));
     int startNode = 0;
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     for (int i = 0; i < testRuns; i++){
         printf("================ illegal test num %d ===============\n", i);
         graph.makeSomeEgdesIllegal(illegalValsPerRow[i]);
-        graph.print();
+        //graph.print();
         startTime = std::time(NULL);
         Search search(&graph);
         Result result = search.findPath(startNode);
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i<results.size(); i++){
         Result result = results.at(i);
-        printf("%.1f\t %.1f\t %.1f\t %d\t %d\t %d\t %d\n", illegalValsPerRow[i], result.prcntIllegal, result.prcntIllegalInPath,
+        printf("%d.  %.1f\t %.1f\t %.1f\t %d\t %d\t %d\t %d\n", i, illegalValsPerRow[i], result.prcntIllegal, result.prcntIllegalInPath,
                result.graph->numNodesWithNoOutEdges, result.graph->numNodesWithNoInEdges,
                result.graph->numRowsWithSingleBidirectionalEdge, result.graph->numColsWithSingleBidirectionalEdge);
     }

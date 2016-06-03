@@ -1,0 +1,106 @@
+Read data successfully.
+Read data successfully.
+===========================
+Starting normal search
+Results for file ../GIS/src/tsp5 (5 nodes) and 0 (0.0%) illegal edges in graph:
+Path = 0-1-2-3-4-0
+Cost = 28
+illegal edges in path = 0.0 %
+time = 0 [s]
+iterations = 18
+Number of nodes with just one bidirectional edge = 0 (row-wise) and 0 (column-wise)
+
+
+#Starting illegal tests. Illegal edges are marked with 999999, which is 83333.2 times bigger than max weight in matrix (12).
+================ illegal test num 0 ===============
+Results for file ../GIS/src/tsp5 (5 nodes) and 5 (25.0%) illegal edges in graph:
+Path = 0-4-3-2-1-0
+Cost = 28
+illegal edges in path = 0.0 %
+time = 0 [s]
+iterations = 10
+Number of nodes with just one bidirectional edge = 0 (row-wise) and 0 (column-wise)
+
+================ illegal test num 1 ===============
+Results for file ../GIS/src/tsp5 (5 nodes) and 10 (50.0%) illegal edges in graph:
+Path = 0-3-1-2-4-0
+Cost = 38
+illegal edges in path = 0.0 %
+time = 0 [s]
+iterations = 6
+Number of nodes with just one bidirectional edge = 0 (row-wise) and 3 (column-wise)
+
+================ illegal test num 2 ===============
+Results for file ../GIS/src/tsp5 (5 nodes) and 10 (50.0%) illegal edges in graph:
+Path = 0-1-4-3-2-0
+Cost = 34
+illegal edges in path = 0.0 %
+time = 0 [s]
+iterations = 8
+Number of nodes with just one bidirectional edge = 0 (row-wise) and 2 (column-wise)
+
+================ illegal test num 3 ===============
+Results for file ../GIS/src/tsp5 (5 nodes) and 15 (75.0%) illegal edges in graph:
+Path = 0-2-1-3-4-0
+Cost = 2000018
+illegal edges in path = 33.3 %
+time = 0 [s]
+iterations = 5
+Number of nodes with just one bidirectional edge = 5 (row-wise) and 1 (column-wise)
+Number of nodes with no outgoing edges = 0
+Number of nodes with no incoming edges = 2
+
+================ illegal test num 4 ===============
+Results for file ../GIS/src/tsp5 (5 nodes) and 15 (75.0%) illegal edges in graph:
+Path = 0-2-3-1-4-0
+Cost = 2000019
+illegal edges in path = 33.3 %
+time = 0 [s]
+iterations = 17
+Number of nodes with just one bidirectional edge = 5 (row-wise) and 2 (column-wise)
+Number of nodes with no outgoing edges = 0
+Number of nodes with no incoming edges = 2
+
+================ illegal test num 5 ===============
+Results for file ../GIS/src/tsp5 (5 nodes) and 15 (75.0%) illegal edges in graph:
+Path = 0-4-2-3-1-0
+Cost = 2000018
+illegal edges in path = 33.3 %
+time = 0 [s]
+iterations = 5
+Number of nodes with just one bidirectional edge = 5 (row-wise) and 1 (column-wise)
+Number of nodes with no outgoing edges = 0
+Number of nodes with no incoming edges = 2
+
+================ illegal test num 6 ===============
+Results for file ../GIS/src/tsp5 (5 nodes) and 20 (100.0%) illegal edges in graph:
+Path = 0-4-3-1-2-0
+Cost = 4999995
+illegal edges in path = 83.3 %
+time = 0 [s]
+iterations = 42
+Number of nodes with just one bidirectional edge = 0 (row-wise) and 0 (column-wise)
+Number of nodes with no outgoing edges = 5
+Number of nodes with no incoming edges = 5
+
+================ illegal test num 7 ===============
+Results for file ../GIS/src/tsp5 (5 nodes) and 20 (100.0%) illegal edges in graph:
+Path = 0-4-3-1-2-0
+Cost = 4999995
+illegal edges in path = 83.3 %
+time = 0 [s]
+iterations = 42
+Number of nodes with just one bidirectional edge = 0 (row-wise) and 0 (column-wise)
+Number of nodes with no outgoing edges = 5
+Number of nodes with no incoming edges = 5
+
+forbiddenPerRow[%]	 forbiddenEgdes[%]	 forbiddenInPath[%] 	BlockedRows 	BlockedCols 	Row-wise singleNode 	Col-wise singleNode
+0.  0.3	 0.0	 0.0	 5	 5	 0	 0
+1.  0.4	 25.0	 0.0	 5	 5	 0	 0
+2.  0.5	 50.0	 0.0	 5	 5	 0	 0
+3.  0.6	 50.0	 0.0	 5	 5	 0	 0
+4.  0.6	 75.0	 33.3	 5	 5	 0	 0
+5.  0.7	 75.0	 33.3	 5	 5	 0	 0
+6.  0.8	 75.0	 33.3	 5	 5	 0	 0
+7.  0.8	 100.0	 83.3	 5	 5	 0	 0
+8.  0.0	 100.0	 83.3	 5	 5	 0	 0
