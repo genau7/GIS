@@ -149,7 +149,7 @@ Result Search::prepareResult(int numIterations){
         if(edgeIllegal)
             illegalEdgesNum++;
     }
-    Result result(numIterations, graph->getVerticesNum(), illegalEdgesNum, totalCost, path);
+    Result result(numIterations, graph->getVerticesNum(), illegalEdgesNum, totalCost, path, graph);
     return result;
 }
 

@@ -15,11 +15,19 @@ public:
     void makeIllegal(int num);
     void makeSomeEgdesIllegal(float percentPerRow);
     int illegalEdgesNum();
+    int numNodesWithNoInEdges;
+    int numNodesWithNoOutEdges;
+    int numRowsWithSingleBidirectionalEdge;
+    int numColsWithSingleBidirectionalEdge;
     void updateData(std::vector<std::vector<int> > data);
-    ~Graph();
+    void evaluateNodes();
+    void findMaxWeight();
+    int getMaxWeight();
 private:
     int vNum; //number of vertices
     std::vector<std::vector<int> > data;
+    int maxWeight;
+    int illegalEdgesNumInRow(int row);
 };
 
 #endif // GRAPH_H

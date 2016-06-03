@@ -14,7 +14,7 @@
 #include <ctime>
 #include <cstdlib>
 
-const int BIG_WEIGHT = 9999;
+const int BIG_WEIGHT = 999999;
 
 class FileParser
 {
