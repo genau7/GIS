@@ -67,6 +67,14 @@ void Graph::makeSomeEgdesIllegal(float percentPerRow){
     evaluateNodes();
 }
 
+int getNextInPath(int row, std::deque<int> path){
+    for (int i = 0; i <= path.size(); i++){
+        if(path.at(i) == row)
+            return path.at(i+1);
+    }
+    return 0;
+}
+
 void Graph::makeSomeEgdesIllegal(float percentPerRow, std::deque<int> legalPath){
     int numPerRow = vNum*percentPerRow;
     for (int row = 0; row < vNum; row++){
@@ -76,8 +84,12 @@ void Graph::makeSomeEgdesIllegal(float percentPerRow, std::deque<int> legalPath)
           the diagonal of the matrix and the cell corresponding to the one from legalPath*/
         while(illegalEdgesNumInRow(row) < numPerRow && check < vNum*100){
             int col= std::rand() % vNum;
-            if(col != row && col != legalPath.at(row + 1))
-                data.at(row).at(col) = BIG_WEIGHT;
+           // int debug = getNextInPath(row, legalPath);
+            if(col != row && col != getNextInPath(row, legalPath)){
+                if(row == 3 && col == 5){
+                    //int debug2 = getNextInPath(row, legalPath);
+                    data.at(row).at(col) = BIG_WEIGHT;}
+            }
             check++;
         }
     }

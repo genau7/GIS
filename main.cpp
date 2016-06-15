@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
         dataFile += argv[1];
     }
     else
-        dataFile += "tsp10";
+        dataFile += "tsp9";
 
     std::cout<<"Reading: "<<dataFile<<std::endl;
     //read distance matrix from file into Graph object
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     int check = 10000;
     int failuresNum = 0;
     int i = 0;
-    int illegalIndex = 2;
+    int illegalIndex = 7;
     while(i < check){
 
         graph.makeSomeEgdesIllegal(illegalValsPerRow[illegalIndex], normalResult.path);
@@ -52,18 +52,19 @@ int main(int argc, char *argv[])
         Result result = search.findPath(startNode);
         results.push_back(result);
         result.update(0, dataFile);
-        graph.updateData(originalData);
-        if(result.failed) failuresNum++;
+        if(result.failed) {
+            failuresNum++;
+            normalResult.printPath();
+            result.print();
+            graph.print();
+        }
         if(failuresNum >= 10){
             printf("FAILURE!!!\n");
             break;
         }
-        if(i%100 == 0)
+        if(i%200 == 0)
             printf("[%d] - %d\n", i, failuresNum);
-        //if (failuresNum*1.0/i > 0.1)
-          //  break;
-      //  else if (failuresNum*1.0/i >= 0.05)
-      //      printf("FAILED!!!!\n");
+        graph.updateData(originalData);
         i++;
     }
     printf("Performed %d tests for file named %s and %.1f illegal values in each row.\n%d times the algorithm failed (%.4f)\n",

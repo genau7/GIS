@@ -45,3 +45,9 @@ void Result::print(){
     }
     printf("\n");
 }
+
+void Result::printPath(){
+    printf("Path = %d", path.at(0));
+    for (int i = 1; i < path.size(); i++)
+        printf("-%d", path.at(i));
+}

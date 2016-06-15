@@ -25,6 +25,7 @@ public:
 
     void update(unsigned long time, std::string fileName);
     void print();
+    void printPath();
 
 };
 
