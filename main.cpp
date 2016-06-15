@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
         dataFile += argv[1];
     }
     else
-        dataFile += "tsp15";
+        dataFile += "tsp10";
 
     std::cout<<"Reading: "<<dataFile<<std::endl;
     //read distance matrix from file into Graph object
@@ -44,10 +44,10 @@ int main(int argc, char *argv[])
     int check = 10000;
     int failuresNum = 0;
     int i = 0;
-    int illegalIndex = 3;
+    int illegalIndex = 2;
     while(i < check){
 
-        graph.makeSomeEgdesIllegal(illegalValsPerRow[illegalIndex]);
+        graph.makeSomeEgdesIllegal(illegalValsPerRow[illegalIndex], normalResult.path);
         Search search(&graph);
         Result result = search.findPath(startNode);
         results.push_back(result);

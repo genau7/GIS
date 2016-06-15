@@ -14,6 +14,7 @@ public:
     bool edgeExists(int srcIndex, int dstIndex);
     void makeIllegal(int num);
     void makeSomeEgdesIllegal(float percentPerRow);
+    void makeSomeEgdesIllegal(float percentPerRow, std::deque<int> legalPath);
     int illegalEdgesNum();
     int numNodesWithNoInEdges;
     int numNodesWithNoOutEdges;

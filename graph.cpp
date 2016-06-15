@@ -67,6 +67,23 @@ void Graph::makeSomeEgdesIllegal(float percentPerRow){
     evaluateNodes();
 }
 
+void Graph::makeSomeEgdesIllegal(float percentPerRow, std::deque<int> legalPath){
+    int numPerRow = vNum*percentPerRow;
+    for (int row = 0; row < vNum; row++){
+        int check = 0;
+
+        /*try to put BIG_WEIGHT in random cell in row other than
+          the diagonal of the matrix and the cell corresponding to the one from legalPath*/
+        while(illegalEdgesNumInRow(row) < numPerRow && check < vNum*100){
+            int col= std::rand() % vNum;
+            if(col != row && col != legalPath.at(row + 1))
+                data.at(row).at(col) = BIG_WEIGHT;
+            check++;
+        }
+    }
+    evaluateNodes();
+}
+
 
 void Graph::evaluateNodes(){
     numRowsWithSingleBidirectionalEdge = numColsWithSingleBidirectionalEdge = 0;
