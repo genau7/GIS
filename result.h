@@ -18,6 +18,7 @@ public:
     int illegalEdgesInPath;
     float prcntIllegal;
     float prcntIllegalInPath;
+    bool failed;
     std::deque<int> path;
     int pathCost;
     Graph* graph;

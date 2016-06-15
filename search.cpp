@@ -183,11 +183,12 @@ int Search::heuristic2(int goal, Node *lastNode){
     return edgesLeftTillGoal * minDistance;
 }
 
-int Search::heuristic(int start, Node* lastNode){
+int Search::heuristic
+(int start, Node* lastNode){
 
     std::set<int> closed =lastNode->path2IndexSet() ;
     int vNum = graph->getVerticesNum();
-    if(vNum - closed.size() ==1)
+    if(vNum - closed.size() == 1)
         return distance(start, this->goalIndex);
     std::vector<int> parents(vNum, NONE); //minimum spanning tree path (first node's parent index is -1), indicated by nodes' parent
     std::vector<int> minDistanceFromTree(vNum, INT_MAX);

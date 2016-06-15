@@ -15,6 +15,7 @@ Result::Result(unsigned long iterations, int n, int illegalEdgesInPath, int path
     this->graph = graph;
     this->prcntIllegal = graph->illegalEdgesNum()*100.0/edgesNum;
     this->illegalEdges = graph->illegalEdgesNum();
+    this->failed = (illegalEdgesInPath > 0)? true : false;
 }
 
 void Result::update(unsigned long time, std::string fileName){
