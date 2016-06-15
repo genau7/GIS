@@ -84,11 +84,10 @@ void Graph::makeSomeEgdesIllegal(float percentPerRow, std::deque<int> legalPath)
           the diagonal of the matrix and the cell corresponding to the one from legalPath*/
         while(illegalEdgesNumInRow(row) < numPerRow && check < vNum*100){
             int col= std::rand() % vNum;
-           // int debug = getNextInPath(row, legalPath);
+            int debug = getNextInPath(row, legalPath);
             if(col != row && col != getNextInPath(row, legalPath)){
-                if(row == 3 && col == 5){
                     //int debug2 = getNextInPath(row, legalPath);
-                    data.at(row).at(col) = BIG_WEIGHT;}
+                    data.at(row).at(col) = BIG_WEIGHT;
             }
             check++;
         }

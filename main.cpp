@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
         dataFile += argv[1];
     }
     else
-        dataFile += "tsp9";
+        dataFile += "tsp23";
 
     std::cout<<"Reading: "<<dataFile<<std::endl;
     //read distance matrix from file into Graph object
@@ -39,12 +39,12 @@ int main(int argc, char *argv[])
   //         BIG_WEIGHT, BIG_WEIGHT*1.0/graph.getMaxWeight(), graph.getMaxWeight());
 
     int testRuns = 8;
-    float illegalValsPerRow[] = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.6, 0.7, 0.8, 0.8};
+    float illegalValsPerRow[] = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9};
 
     int check = 10000;
     int failuresNum = 0;
     int i = 0;
-    int illegalIndex = 7;
+    int illegalIndex=4;
     while(i < check){
 
         graph.makeSomeEgdesIllegal(illegalValsPerRow[illegalIndex], normalResult.path);
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
             break;
         }
         if(i%200 == 0)
-            printf("[%d] - %d\n", i, failuresNum);
+            printf("[%d] - %d   target = %.1f,result is %.2f\n", i, failuresNum, illegalValsPerRow[illegalIndex], result.prcntIllegal);
         graph.updateData(originalData);
         i++;
     }
